@@ -1,0 +1,46 @@
+name: Deploy Laravel Application
+
+on:
+  push: 
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run tests
+        run: php artisan test
+
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t your-dockerhub-username/laravel-app .
+
+      - name: Push Docker image to Docker Hub
+        run: docker push your-dockerhub-username/laravel-app:latest
+        
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from Docker Hub
+        run: sudo docker pull your-dockerhub-username/laravel-app:latest
+
+      - name: Delete old container
+        run: sudo docker rm -f laravel-app-container || true
+
+      - name: Run Docker container
+        run: sudo docker run -d -p 9000:9000 --name laravel-app-container --link mysql-container:mysql --env-file .env your-dockerhub-username/laravel-app:latest
