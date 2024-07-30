@@ -27,20 +27,29 @@ jobs:
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t your-dockerhub-username/laravel-app .
+        run: docker build -t diockerhub/laravel-app .
 
       - name: Push Docker image to Docker Hub
-        run: docker push your-dockerhub-username/laravel-app:latest
+        run: docker push diockerhub/laravel-app:latest
         
   deploy:
     needs: build
     runs-on: self-hosted
     steps:
       - name: Pull image from Docker Hub
-        run: sudo docker pull your-dockerhub-username/laravel-app:latest
+        run: sudo docker pull diockerhub/laravel-app:latest
+
+      - name: Create network if not exists
+        run: |
+          if ! docker network inspect backend-network >/dev/null 2>&1; then
+            docker network create backend-network
+          fi
 
       - name: Delete old container
         run: sudo docker rm -f laravel-app-container || true
 
       - name: Run Docker container
-        run: sudo docker run -d -p 9000:9000 --name laravel-app-container --link mysql-container:mysql --env-file .env your-dockerhub-username/laravel-app:latest
+        run: sudo docker run -d --network backend-network -p 9000:9000 --name laravel-app-container  --env-file .env diockerhub/laravel-app:latest
+ 
+      - name: Run Sequelize migrations
+        run: sudo docker exec node-app-container npx sequelize-cli db:migrate
