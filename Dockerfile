@@ -54,6 +54,9 @@ COPY composer.json composer.lock ./
 # Instalar dependencias de PHP
 RUN composer install --no-scripts --no-autoloader
 
+# Copiar el archivo .env al contenedor
+COPY .env .env
+
 # Copiar el resto de los archivos del proyecto
 COPY . .
 
