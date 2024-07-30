@@ -43,7 +43,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Pull image from Docker Hub
-        run: sudo docker pull diockerhub/laravel-app:latest
+        run: docker pull diockerhub/laravel-app:latest
 
       - name: Create network if not exists
         run: |
@@ -52,10 +52,10 @@ jobs:
           fi
 
       - name: Delete old container
-        run: sudo docker rm -f laravel-app-container || true
+        run: docker rm -f laravel-app-container || true
 
       - name: Run Docker container
-        run: sudo docker run -d --network backend-network -p 9000:9000 --name laravel-app-container  --env-file .env diockerhub/laravel-app:latest
+        run: docker run -d --network backend-network -p 9000:9000 --name laravel-app-container  --env-file .env diockerhub/laravel-app:latest
  
       - name: Run Sequelize migrations
-        run: sudo docker exec node-app-container npx sequelize-cli db:migrate
+        run: docker exec node-app-container npx sequelize-cli db:migrate
