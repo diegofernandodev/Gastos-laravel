@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+
+      - name: Copy .env file
+        run: cp .env.example .env
         
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
