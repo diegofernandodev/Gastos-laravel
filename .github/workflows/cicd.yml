@@ -47,8 +47,8 @@ jobs:
 
       - name: Create network if not exists
         run: |
-          if ! docker network inspect backend-network >/dev/null 2>&1; then
-            docker network create backend-network
+          if ! sudo docker network inspect backend-network >/dev/null 2>&1; then
+            sudo docker network create backend-network
           fi
 
       - name: Delete old container
