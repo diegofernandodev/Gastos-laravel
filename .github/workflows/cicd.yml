@@ -14,18 +14,18 @@ jobs:
 
       - name: Create .env file
         run: |
-          echo "APP_NAME=Laravel" >> .env
-          echo "APP_ENV=local" >> .env
-          echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
-          echo "APP_DEBUG=true" >> .env
-          echo "APP_URL=http://localhost" >> .env
-          echo "LOG_CHANNEL=stack" >> .env
-          echo "DB_CONNECTION=mysql" >> .env
-          echo "DB_HOST=mysql-container" >> .env  # Nombre del servicio de base de datos en docker-compose.yml
-          echo "DB_PORT=3306" >> .env
-          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "APP_NAME=Laravel" >> laravel.env
+          echo "APP_ENV=local" >> laravel.env
+          echo "APP_KEY=${{ secrets.APP_KEY }}" >> laravel.env
+          echo "APP_DEBUG=true" >> laravel.env
+          echo "APP_URL=http://localhost" >> laravel.env
+          echo "LOG_CHANNEL=stack" >> laravel.env
+          echo "DB_CONNECTION=mysql" >> laravel.env
+          echo "DB_HOST=mysql-container" >> laravel.env
+          echo "DB_PORT=3306" >> laravel.env
+          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> laravel.env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> laravel.env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> laravel.env
 
               
       - name: Set up PHP
@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: env-file
-          path: .env
+          path: laravel.env
         
   deploy:
     needs: build
@@ -80,7 +80,7 @@ jobs:
           fi
 
       - name: Verify .env file
-        run: cat .env
+        run: cat laravel.env
 
       - name: Delete old container
         run: sudo docker rm -f laravel-app-container || true
