@@ -39,7 +39,17 @@ jobs:
           php-version: '8.2'
 
       - name: Verify .env file
-        run: ls -la
+        run: |
+          if [ -d ".env" ]; then
+            echo ".env is a directory"
+            exit 1
+          elif [ -f ".env" ]; then
+            echo ".env is a file"
+            cat .env
+          else
+            echo ".env does not exist"
+            exit 1
+          fi
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
@@ -85,7 +95,17 @@ jobs:
           fi
 
       - name: Verify .env file
-        run: ls -la
+        run: |
+          if [ -d ".env" ]; then
+            echo ".env is a directory"
+            exit 1
+          elif [ -f ".env" ]; then
+            echo ".env is a file"
+            cat .env
+          else
+            echo ".env does not exist"
+            exit 1
+          fi
 
       - name: Delete old container
         run: sudo docker rm -f laravel-app-container || true
