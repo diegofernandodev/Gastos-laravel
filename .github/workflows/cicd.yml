@@ -55,7 +55,7 @@ jobs:
         run: sudo docker rm -f laravel-app-container || true
 
       - name: Run Docker container
-        run: sudo docker run -d --network backend-network -p 9000:9000 --name laravel-app-container -v $(pwd)/.env:/var/www/.env diockerhub/laravel-app:latest
+        run: sudo docker run -d --network backend-network -p 9000:9000 --name laravel-app-container -v ${{ github.workspace }}/.env:/var/www/.env diockerhub/laravel-app:latest
  
       - name: Run Sequelize migrations
         run: sudo docker exec node-app-container npx sequelize-cli db:migrate
