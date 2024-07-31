@@ -34,7 +34,7 @@ jobs:
           php-version: '8.2'
 
       - name: Verify .env file
-        run: cat .env
+        run: cat laravel.env
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
