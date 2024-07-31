@@ -53,11 +53,23 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: docker push diockerhub/laravel-app:latest
+
+      - name: Upload .env file
+        uses: actions/upload-artifact@v3
+        with:
+          name: env-file
+          path: .env
         
   deploy:
     needs: build
     runs-on: self-hosted
     steps:
+      - name: Download .env file
+        uses: actions/download-artifact@v3
+        with:
+          name: env-file
+          path: .env
+
       - name: Pull image from Docker Hub
         run: sudo docker pull diockerhub/laravel-app:latest
 
@@ -68,13 +80,13 @@ jobs:
           fi
 
       - name: Verify .env file
-        run: cat /home/runner/actions-runner/_work/Gastos-laravel/Gastos-laravel/.env
+        run: cat .env
 
       - name: Delete old container
         run: sudo docker rm -f laravel-app-container || true
 
       - name: Run Docker container
-        run: sudo docker run -d --network backend-network -p 9000:9000 --name laravel-app-container --env-file /home/runner/actions-runner/_work/Gastos-laravel/Gastos-laravel/.env diockerhub/laravel-app:latest
+        run: sudo docker run -d --network backend-network -p 9000:9000 --name laravel-app-container --env-file .env diockerhub/laravel-app:latest
  
       - name: Run Sequelize migrations
         run: sudo docker exec node-app-container npx sequelize-cli db:migrate
