@@ -12,16 +12,29 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Copy .env file
-        run: cp .env.example .env
-        
+      - name: Create .env file
+        run: |
+          echo "APP_NAME=Laravel" >> .env
+          echo "APP_ENV=local" >> .env
+          echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
+          echo "APP_DEBUG=true" >> .env
+          echo "APP_URL=http://localhost" >> .env
+          echo "LOG_CHANNEL=stack" >> .env
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=mysql-container" >> .env  # Nombre del servicio de base de datos en docker-compose.yml
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+
+              
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
 
       - name: Verify .env file
-        run: ls -la .env
+        run: cat .env
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
@@ -53,6 +66,9 @@ jobs:
           if ! sudo docker network inspect backend-network >/dev/null 2>&1; then
             sudo docker network create backend-network
           fi
+
+      - name: Verify .env file
+        run: cat /home/runner/actions-runner/_work/Gastos-laravel/Gastos-laravel/.env
 
       - name: Delete old container
         run: sudo docker rm -f laravel-app-container || true
