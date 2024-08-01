@@ -12,10 +12,12 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Remove .env directory if it exists
+      - name: Ensure .env is not a directory
         run: |
           if [ -d ".env" ]; then
             rm -rf .env
+          elif [ -f ".env" ]; then
+            rm -f .env
           fi
 
       - name: Create .env file
@@ -83,7 +85,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: env-file
-          path: .env
+          path: .
 
       - name: Pull image from Docker Hub
         run: sudo docker pull diockerhub/laravel-app:latest
