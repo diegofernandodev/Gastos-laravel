@@ -1,7 +1,7 @@
 name: Deploy Laravel Application
 
 on:
-  push: 
+  push:
     branches:
       - master
 
@@ -80,20 +80,34 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
+      - name: Ensure .env is not a directory before download
+        run: |
+          if [ -d ".env" ]; then
+            rm -rf .env
+          fi
+
       - name: Download .env file
         uses: actions/download-artifact@v3
         with:
           name: env-file
           path: .
 
-      - name: Ensure .env is not a directory
+      - name: Move .env file
+        run: |
+          mv env-file .env
+
+      - name: Ensure .env is not a directory after download
         run: |
           if [ -d ".env" ]; then
-            rm -rf .env
+            echo ".env is a directory"
+            exit 1
+          elif [ -f ".env" ]; then
+            echo ".env is a file"
+            cat .env
+          else
+            echo ".env does not exist"
+            exit 1
           fi
-
-      - name: Move .env to correct location
-        run: mv env-file/.env .
 
       - name: Pull image from Docker Hub
         run: sudo docker pull diockerhub/laravel-app:latest
