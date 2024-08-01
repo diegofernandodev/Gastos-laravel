@@ -92,6 +92,9 @@ jobs:
           name: env-file
           path: .
 
+      - name: List directory contents
+        run: ls -la
+
       - name: Move .env file
         run: |
           mv env-file .env
@@ -116,19 +119,6 @@ jobs:
         run: |
           if ! sudo docker network inspect backend-network >/dev/null 2>&1; then
             sudo docker network create backend-network
-          fi
-
-      - name: Verify .env file
-        run: |
-          if [ -d ".env" ]; then
-            echo ".env is a directory"
-            exit 1
-          elif [ -f ".env" ]; then
-            echo ".env is a file"
-            cat .env
-          else
-            echo ".env does not exist"
-            exit 1
           fi
 
       - name: Delete old container
