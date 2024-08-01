@@ -92,12 +92,15 @@ jobs:
           name: env-file
           path: .
 
-      - name: List directory contents
+      - name: List directory contents after download
         run: ls -la
+
+      - name: List directory contents of env-file
+        run: ls -la env-file
 
       - name: Move .env file
         run: |
-          mv env-file .env
+          mv env-file/.env .
 
       - name: Ensure .env is not a directory after download
         run: |
