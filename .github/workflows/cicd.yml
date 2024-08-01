@@ -12,7 +12,7 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Remove .env directory if it exists
+      - name: Ensure .env is not a directory
         run: |
           if [ -d ".env" ]; then
             rm -rf .env
@@ -20,6 +20,7 @@ jobs:
 
       - name: Create .env file
         run: |
+          touch .env
           echo "APP_NAME=Laravel" > .env
           echo "APP_ENV=local" >> .env
           echo "APP_KEY=${{ secrets.APP_KEY }}" >> .env
@@ -83,7 +84,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: env-file
-          path: .env
+          path: .
 
       - name: Pull image from Docker Hub
         run: sudo docker pull diockerhub/laravel-app:latest
@@ -113,5 +114,5 @@ jobs:
       - name: Run Docker container
         run: sudo docker run -d --network backend-network -p 9000:9000 --name laravel-app-container --env-file .env diockerhub/laravel-app:latest
 
-      - name: Run Sequelize migrations
-        run: sudo docker exec node-app-container npx sequelize-cli db:migrate
+      - name: Run Laravel migrations
+        run: sudo docker exec laravel-app-container php artisan migrate --force
