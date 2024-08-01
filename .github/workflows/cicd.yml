@@ -1,7 +1,7 @@
 name: Deploy Laravel Application
 
 on:
-  push:
+  push: 
     branches:
       - master
 
@@ -95,12 +95,15 @@ jobs:
       - name: List directory contents after download
         run: ls -la
 
+      - name: List directory contents of env-file
+        run: ls -la env-file
+
       - name: Find .env file location
         run: find . -name ".env"
 
       - name: Move .env file
         run: |
-          mv path/to/downloaded/.env .
+          mv env-file/.env .
 
       - name: Ensure .env is not a directory after download
         run: |
