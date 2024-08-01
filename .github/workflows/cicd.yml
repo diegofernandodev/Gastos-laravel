@@ -1,7 +1,7 @@
 name: Deploy Laravel Application
 
 on:
-  push: 
+  push:
     branches:
       - master
 
@@ -33,6 +33,9 @@ jobs:
           echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+
+      - name: List directory contents after .env creation
+        run: ls -la
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
@@ -95,15 +98,14 @@ jobs:
       - name: List directory contents after download
         run: ls -la
 
-      - name: List directory contents of env-file
-        run: ls -la env-file
-
       - name: Find .env file location
         run: find . -name ".env"
 
-      - name: Move .env file
+      - name: Move .env file if necessary
         run: |
-          mv env-file/.env .
+          if [ -f "env-file/.env" ]; then
+            mv env-file/.env .
+          fi
 
       - name: Ensure .env is not a directory after download
         run: |
