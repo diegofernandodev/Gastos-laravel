@@ -1,7 +1,7 @@
 name: Deploy Laravel Application
 
 on:
-  push:
+  push: 
     branches:
       - master
 
@@ -85,6 +85,15 @@ jobs:
         with:
           name: env-file
           path: .
+
+      - name: Ensure .env is not a directory
+        run: |
+          if [ -d ".env" ]; then
+            rm -rf .env
+          fi
+
+      - name: Move .env to correct location
+        run: mv env-file/.env .
 
       - name: Pull image from Docker Hub
         run: sudo docker pull diockerhub/laravel-app:latest
