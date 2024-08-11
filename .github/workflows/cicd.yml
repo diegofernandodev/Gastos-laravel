@@ -28,7 +28,7 @@ jobs:
           echo "APP_URL=http://localhost" >> .env
           echo "LOG_CHANNEL=stack" >> .env
           echo "DB_CONNECTION=mysql" >> .env
-          echo "DB_HOST=mysql-container" >> .env
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
           echo "DB_PORT=3306" >> .env
           echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
@@ -133,7 +133,7 @@ jobs:
         run: sudo docker rm -f laravel-app-container || true
 
       - name: Run Docker container
-        run: sudo docker run -d --network backend-network -p 9000:9000 --name laravel-app-container --env-file .env diockerhub/laravel-app:latest
+        run: sudo docker run -d --network backend-network -p 8000:8000 --name laravel-app-container --env-file .env diockerhub/laravel-app:latest
 
       - name: Run Laravel migrations
         run: sudo docker exec laravel-app-container php artisan migrate --force

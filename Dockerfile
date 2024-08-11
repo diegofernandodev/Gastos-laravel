@@ -67,7 +67,7 @@ RUN composer dump-autoload --optimize
 RUN chown -R www-data:www-data /var/www
 
 # Exponer el puerto en el que Laravel escucha
-EXPOSE 9000
+EXPOSE 8000
 
 # Comando para iniciar el servidor PHP-FPM
 CMD ["php-fpm"]
