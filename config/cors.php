@@ -20,11 +20,15 @@ return [
     'allowed_methods' => ['*'],
 
     // 
+
     'allowed_origins' => [
-        'http://localhost:4200',  // URL de tu frontend local
-        'http://3.140.230.73:4200',     // URL de tu frontend en producción (si aplica)
-        'http://3.140.230.73',
-    ],
+    'http://localhost:4200',  // URL de tu frontend local
+    'http://localhost:8081',
+    'http://3.140.230.73:4200',  // URL de tu frontend en producción (si aplica)
+    'http://3.140.230.73',
+    'http://3.140.230.73:80'
+],
+
 
     'allowed_origins_patterns' => [],
 
