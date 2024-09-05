@@ -34,7 +34,6 @@ jobs:
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
 
-         
       - name: List directory contents after .env creation
         run: ls -la
 
@@ -73,16 +72,6 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: docker push diockerhub/laravel-app:latest
-
-      # - name: Login to GitHub Packages
-      #   run: echo "${{ secrets.TOKEN_GITHUB }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-    
-      # - name: Build Docker image
-      #   run: docker build -t ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest .
-    
-      # - name: Push Docker image to GitHub Packages
-      #   run: docker push ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest
-    
 
       - name: Upload .env file
         uses: actions/upload-artifact@v3
@@ -133,11 +122,6 @@ jobs:
 
       - name: Pull image from Docker Hub
         run: sudo docker pull diockerhub/laravel-app:latest
-
-      # - name: Pull image from GitHub Packages
-      #   run: sudo docker pull ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest
-
-
 
       - name: Create network if not exists
         run: |
