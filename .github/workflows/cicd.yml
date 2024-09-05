@@ -65,23 +65,23 @@ jobs:
       - name: Run tests
         run: php artisan test
 
-      # - name: Login to Docker Hub
-      #   run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      - name: Login to Docker Hub
+        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      # - name: Build Docker image
-      #   run: docker build -t diockerhub/laravel-app .
-
-      # - name: Push Docker image to Docker Hub
-      #   run: docker push diockerhub/laravel-app:latest
-
-      - name: Login to GitHub Packages
-        run: echo "${{ secrets.TOKEN_GITHUB }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-    
       - name: Build Docker image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest .
+        run: docker build -t diockerhub/laravel-app .
+
+      - name: Push Docker image to Docker Hub
+        run: docker push diockerhub/laravel-app:latest
+
+      # - name: Login to GitHub Packages
+      #   run: echo "${{ secrets.TOKEN_GITHUB }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
     
-      - name: Push Docker image to GitHub Packages
-        run: docker push ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest
+      # - name: Build Docker image
+      #   run: docker build -t ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest .
+    
+      # - name: Push Docker image to GitHub Packages
+      #   run: docker push ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest
     
 
       - name: Upload .env file
@@ -131,11 +131,11 @@ jobs:
             exit 1
           fi
 
-      # - name: Pull image from Docker Hub
-      #   run: sudo docker pull diockerhub/laravel-app:latest
+      - name: Pull image from Docker Hub
+        run: sudo docker pull diockerhub/laravel-app:latest
 
-      - name: Pull image from GitHub Packages
-        run: sudo docker pull ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest
+      # - name: Pull image from GitHub Packages
+      #   run: sudo docker pull ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest
 
 
 
