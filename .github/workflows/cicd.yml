@@ -82,12 +82,13 @@ jobs:
 
       - name: Login to GitHub Packages
         run: echo "${{ secrets.TOKEN_GITHUB }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
+    
       - name: Build Docker image
-        run: docker build -t ghcr.io/${{ github.repository }}/laravel-app:latest .
-
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest .
+    
       - name: Push Docker image to GitHub Packages
-        run: docker push ghcr.io/${{ github.repository }}/laravel-app:latest
+        run: docker push ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest
+    
 
       - name: Upload .env file
         uses: actions/upload-artifact@v3
@@ -140,7 +141,8 @@ jobs:
       #   run: sudo docker pull diockerhub/laravel-app:latest
 
       - name: Pull image from GitHub Packages
-        run: sudo docker pull ghcr.io/${{ github.repository }}/laravel-app:latest
+        run: sudo docker pull ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest
+
 
 
       - name: Create network if not exists
