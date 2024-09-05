@@ -34,13 +34,7 @@ jobs:
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
 
-          # Configuración de S3
-          echo "FILESYSTEM_DRIVER=s3" >> .env
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
-          echo "AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }}" >> .env
-          echo "AWS_BUCKET=${{ secrets.AWS_BUCKET }}" >> .env
-
+         
       - name: List directory contents after .env creation
         run: ls -la
 
