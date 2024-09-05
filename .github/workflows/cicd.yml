@@ -73,6 +73,9 @@ jobs:
       - name: Push Docker image to Docker Hub
         run: docker push diockerhub/laravel-app:latest
 
+      - name: List files before uploading .env
+        run: ls -la
+      
       - name: Upload .env file
         uses: actions/upload-artifact@v3
         with:
@@ -95,6 +98,9 @@ jobs:
           name: env-file
           path: .
 
+      - name: List files after downloading .env
+        run: ls -la
+        
       - name: List directory contents after download
         run: ls -la
 
