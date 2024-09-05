@@ -6,6 +6,7 @@ use App\Http\Requests\SaveExpenseRequest;
 use App\Models\Expense;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class ExpenseController extends Controller
 {
@@ -24,7 +25,22 @@ class ExpenseController extends Controller
      */
     public function store(SaveExpenseRequest $request): JsonResponse
     {
-        $expense = Expense::create($request->validated());
+        // Subir la imagen a S3 si está presente
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('expenses', 's3');
+
+            // Hacer que la imagen sea pública (opcional)
+            Storage::disk('s3')->setVisibility($imagePath, 'public');
+
+            // Obtener la URL pública de la imagen
+            $imageUrl = Storage::disk('s3')->url($imagePath);
+        }
+
+        // Crear el registro de gasto en la base de datos
+        $expense = Expense::create(array_merge(
+            $request->validated(),
+            ['image_url' => $imageUrl ?? null]
+        ));
 
         return response()->json($expense, Response::HTTP_CREATED);
     }
@@ -46,7 +62,26 @@ class ExpenseController extends Controller
     {
         $expense = Expense::findOrFail($id);
 
-        $expense->update($request->validated());
+        // Subir una nueva imagen a S3 si está presente
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('expenses', 's3');
+
+            // Hacer que la imagen sea pública (opcional)
+            Storage::disk('s3')->setVisibility($imagePath, 'public');
+
+            // Obtener la URL pública de la imagen
+            $imageUrl = Storage::disk('s3')->url($imagePath);
+
+            // Eliminar la imagen anterior de S3 (opcional)
+            if ($expense->image_url) {
+                Storage::disk('s3')->delete(parse_url($expense->image_url, PHP_URL_PATH));
+            }
+        }
+
+        $expense->update(array_merge(
+            $request->validated(),
+            ['image_url' => $imageUrl ?? $expense->image_url]
+        ));
 
         return response()->json($expense, Response::HTTP_OK);
     }
@@ -57,6 +92,11 @@ class ExpenseController extends Controller
     public function destroy(string $id): JsonResponse
     {
         $expense = Expense::findOrFail($id);
+
+        // Eliminar la imagen de S3 si existe
+        if ($expense->image_url) {
+            Storage::disk('s3')->delete(parse_url($expense->image_url, PHP_URL_PATH));
+        }
 
         $expense->delete();
 

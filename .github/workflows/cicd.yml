@@ -34,6 +34,13 @@ jobs:
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
 
+          # Configuración de S3
+          echo "FILESYSTEM_DRIVER=s3" >> .env
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
+          echo "AWS_DEFAULT_REGION=${{ secrets.AWS_DEFAULT_REGION }}" >> .env
+          echo "AWS_BUCKET=${{ secrets.AWS_BUCKET }}" >> .env
+
       - name: List directory contents after .env creation
         run: ls -la
 
@@ -64,14 +71,23 @@ jobs:
       - name: Run tests
         run: php artisan test
 
-      - name: Login to Docker Hub
-        run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+      # - name: Login to Docker Hub
+      #   run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      # - name: Build Docker image
+      #   run: docker build -t diockerhub/laravel-app .
+
+      # - name: Push Docker image to Docker Hub
+      #   run: docker push diockerhub/laravel-app:latest
+
+      - name: Login to GitHub Packages
+        run: echo "${{ secrets.TOKEN_GITHUB }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t diockerhub/laravel-app .
+        run: docker build -t ghcr.io/${{ github.repository }}/laravel-app:latest .
 
-      - name: Push Docker image to Docker Hub
-        run: docker push diockerhub/laravel-app:latest
+      - name: Push Docker image to GitHub Packages
+        run: docker push ghcr.io/${{ github.repository }}/laravel-app:latest
 
       - name: Upload .env file
         uses: actions/upload-artifact@v3
@@ -120,8 +136,12 @@ jobs:
             exit 1
           fi
 
-      - name: Pull image from Docker Hub
-        run: sudo docker pull diockerhub/laravel-app:latest
+      # - name: Pull image from Docker Hub
+      #   run: sudo docker pull diockerhub/laravel-app:latest
+
+      - name: Pull image from GitHub Packages
+        run: sudo docker pull ghcr.io/${{ github.repository }}/laravel-app:latest
+
 
       - name: Create network if not exists
         run: |

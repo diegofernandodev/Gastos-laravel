@@ -26,6 +26,7 @@ class SaveExpenseRequest extends FormRequest
             'amount'       => 'required|numeric|decimal:0,2',
             'description'  => 'required',
             'expense_date' => 'required|date',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validación para la imagen
         ];
     }
 }
