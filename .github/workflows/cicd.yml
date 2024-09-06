@@ -86,7 +86,7 @@ jobs:
       - name: Upload .env file
         uses: actions/upload-artifact@v3
         with:
-          name: env-file
+          name: env-files
           path: .env
 
       - name: List uploaded artifacts
@@ -104,20 +104,13 @@ jobs:
             rm -rf .env
           fi
 
-      # - name: Download .env file
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: env-file
-      #     path: .
-
       - name: Download .env file
         uses: actions/download-artifact@v3
         with:
-          name: env-file
+          name: env-files
           path: .
-          token: ${{ secrets.TOKEN_GITHUB }}  # O usa un PAT configurado en tus secrets
 
-
+      
       - name: List files after downloading .env
         run: ls -la
         
