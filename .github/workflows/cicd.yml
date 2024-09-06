@@ -34,6 +34,12 @@ jobs:
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
 
+
+      - name: List files after build
+        run: |
+          ls -la
+          cat .env || echo "No .env file found"
+        
       - name: List directory contents after .env creation
         run: ls -la
 
@@ -81,7 +87,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: env-file
-          path: ./.env
+          path: .env
 
       - name: List uploaded artifacts
         run: |
@@ -102,7 +108,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: env-file
-          path: ./
+          path: .
 
       - name: List files after downloading .env
         run: ls -la
