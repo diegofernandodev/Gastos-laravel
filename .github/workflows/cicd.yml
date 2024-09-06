@@ -76,8 +76,7 @@ jobs:
 
       - name: List files before uploading .env
         run: ls -la
-      
-        
+       
       - name: Upload .env file
         uses: actions/upload-artifact@v3
         with:
