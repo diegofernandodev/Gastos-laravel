@@ -81,7 +81,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: env-file
-          path: .env
+          path: ./.env
 
       - name: List uploaded artifacts
         run: |
@@ -102,7 +102,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: env-file
-          path: .
+          path: ./
 
       - name: List files after downloading .env
         run: ls -la
