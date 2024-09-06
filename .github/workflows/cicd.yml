@@ -83,6 +83,20 @@ jobs:
       - name: List files before uploading .env
         run: ls -la
        
+      
+      - name: Verify .env file
+        run: |
+          if [ -d ".env" ]; then
+            echo ".env is a directory"
+            exit 1
+          elif [ -f ".env" ]; then
+            echo ".env is a file"
+            cat .env
+          else
+            echo ".env does not exist"
+            exit 1
+          fi
+
       - name: Upload .env file
         uses: actions/upload-artifact@v3
         with:
