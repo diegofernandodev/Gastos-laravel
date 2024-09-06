@@ -104,11 +104,19 @@ jobs:
             rm -rf .env
           fi
 
+      # - name: Download .env file
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: env-file
+      #     path: .
+
       - name: Download .env file
         uses: actions/download-artifact@v3
         with:
           name: env-file
           path: .
+          token: ${{ secrets.TOKEN_GITHUB }}  # O usa un PAT configurado en tus secrets
+
 
       - name: List files after downloading .env
         run: ls -la
