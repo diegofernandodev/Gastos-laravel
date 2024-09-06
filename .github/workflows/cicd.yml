@@ -142,7 +142,7 @@ jobs:
           fi
 
       - name: Pull image from GitHub Packages
-        run: sudo docker pull ghcr.io/${{ github.repository_owner }}/gastos-laravel/laravel-app:latest
+        run: sudo docker pull ghcr.io/${{ github.repository_owner }}/gastos-laravel:latest
 
 
       - name: Create network if not exists
@@ -152,10 +152,10 @@ jobs:
           fi
 
       - name: Delete old container
-        run: sudo docker rm -f laravel-app-container || true
+        run: sudo docker rm -f laravel-post-container || true
 
       - name: Run Docker container
-        run: sudo docker run -d --network backend-network -p 8000:8000 --name laravel-app-container --env-file .env diockerhub/laravel-app:latest
+        run: sudo docker run -d --network backend-network -p 8000:8000 --name laravel-post-container --env-file .env ghcr.io/${{ github.repository_owner }}/gastos-laravel:latest
 
       - name: Run Laravel migrations
         run: sudo docker exec laravel-app-container php artisan migrate --force
