@@ -103,7 +103,7 @@ jobs:
           name: env-files
           path: .env
           include-hidden-files: true
-          
+
       - name: List uploaded artifacts
         run: |
           curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -156,6 +156,10 @@ jobs:
             exit 1
           fi
 
+
+      - name: Login to GitHub Packages
+        run: echo "${{ secrets.TOKEN_GITHUB }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        
       - name: Pull image from GitHub Packages
         run: sudo docker pull ghcr.io/${{ github.repository_owner }}/gastos-laravel:latest
 
