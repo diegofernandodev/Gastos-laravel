@@ -158,7 +158,7 @@ jobs:
 
 
       - name: Login to GitHub Packages
-        run: echo "${{ secrets.TOKEN_GITHUB }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.PULL_IMAGE_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
         
       - name: Pull image from GitHub Packages
         run: sudo docker pull ghcr.io/${{ github.repository_owner }}/gastos-laravel:latest
