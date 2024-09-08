@@ -177,6 +177,6 @@ jobs:
         run: sudo docker run -d --network backend-network -p 8000:8000 --name laravel-post-container --env-file .env ghcr.io/${{ github.repository_owner }}/gastos-laravel:latest
 
       - name: Run Laravel migrations
-        run: sudo docker exec laravel-app-container php artisan migrate --force
+        run: sudo docker exec laravel-post-container php artisan migrate --force
 
       
